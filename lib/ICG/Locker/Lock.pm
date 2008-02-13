@@ -62,6 +62,14 @@ BEGIN {
   }
 }
 
+=head2 guid
+
+This method returns the lock's globally unique id.
+
+=cut
+
+sub guid { $_[0]->locked_by->{guid} }
+
 =head2 unlock
 
 This method unlocks the lock, deleting the semaphor record.  This method is

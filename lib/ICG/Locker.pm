@@ -5,7 +5,9 @@ use 5.008;
 package ICG::Locker;
 our $VERSION = '0.001';
 
+use ICG::Exceptions;
 use ICG::Handy ();
+use ICG::Locker::Lock;
 use JSON::XS ();
 use Data::GUID ();
 
@@ -57,6 +59,17 @@ sub dbh {
   return $self->{dbh} = $dbh;
 }
 
+=head2 table
+
+This method returns the name of the table in the database in which locks are
+stored.
+
+=cut
+
+sub table {
+  return $_[0]->{table}
+}
+
 =head2 lock
 
   my $lock = $locker->lock($identifier, \%arg);
@@ -91,19 +104,20 @@ sub lock {
   my $table = $self->table;
   my $dbh   = $self->dbh;
   my $rows  = $dbh->do(
-    "INSERT INTO $table (lockstring, expires, locked_by)
+    "INSERT INTO $table (lockstring, created, expires, locked_by)
     VALUES (?, ?, ?, ?)",
     undef,
     $ident,
+    ICG::Handy::now14,
     ICG::Handy::then14(localtime($expires)),
-    $JSON->encode_json($locked_by),
+    $JSON->encode($locked_by),
   );
  
-  X::Unavailable->throw('could not lock resource') unless $rows == 1;
+  X::Unavailable->throw('could not lock resource') unless $rows and $rows == 1;
 
   my $lock = ICG::Locker::Lock->new({
     locker    => $self,
-    lock_id   => $dbh->last_insert_id,
+    lock_id   => $dbh->last_insert_id(undef, undef, $table, 'id'),
     expires   => $expires,
     locked_by => $locked_by,
   });
