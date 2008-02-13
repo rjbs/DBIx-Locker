@@ -128,7 +128,7 @@ sub lock {
     ICG::Handy::then14(localtime($expires)),
     $JSON->encode($locked_by),
   );
- 
+
   X::Unavailable->throw('could not lock resource') unless $rows and $rows == 1;
 
   my $lock = ICG::Locker::Lock->new({
@@ -139,6 +139,28 @@ sub lock {
   });
 
   return $lock;
+}
+
+=head2 purge_expired_locks
+
+This method deletes expired semaphores.
+
+=cut
+
+sub purge_expired_locks {
+  my ($self) = @_;
+
+  my $dbh = $self->dbh;
+  local $dbh->{RaiseError} = 0;
+  local $dbh->{PrintError} = 0;
+
+  my $table = $self->table;
+
+  my $rows = $dbh->do(
+    "DELETE FROM $table WHERE expires < ?",
+    undef,
+    ICG::Handy::now14,
+  );
 }
 
 =head1 COPYRIGHT AND LICENSE
