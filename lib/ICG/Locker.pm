@@ -111,7 +111,6 @@ sub lock {
   my $locked_by = {
     guid => Data::GUID->new->as_string,
     pid  => $$,
-    for  => $arg->{for},
   };
 
   my $table = $self->table;
