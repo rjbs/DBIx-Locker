@@ -36,12 +36,24 @@ sub new {
 
   my $guts = {
     dbh      => $arg->{dbh},
-    dbi_args => ($arg->{dbi_args} || Carp::confess 'arg dbi_args is required'),
-    table    => ($arg->{table}    || Carp::confess 'arg table is required'),
+    dbi_args => ($arg->{dbi_args} || $class->default_dbi_args),
+    table    => ($arg->{table}    || $class->default_table),
   };
 
   return bless $guts => $class;
 }
+
+=head2 default_dbi_args
+
+=head2 default_table
+
+These methods may be defined in subclasses to provide defaults to be used when
+constructing a new locker.
+
+=cut
+
+sub default_dbi_args { X->throw('dbi_args not given and no default defined') }
+sub default_table    { X->throw('table not given and no default defined') }
 
 =head2 dbh
 
