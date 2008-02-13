@@ -5,11 +5,12 @@ use 5.008;
 package ICG::Locker;
 our $VERSION = '0.001';
 
+use DBI;
+use Data::GUID ();
 use ICG::Exceptions;
 use ICG::Handy ();
 use ICG::Locker::Lock;
 use JSON::XS ();
-use Data::GUID ();
 
 =head1 NAME
 
