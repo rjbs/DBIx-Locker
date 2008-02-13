@@ -116,6 +116,10 @@ sub lock {
 
   my $table = $self->table;
   my $dbh   = $self->dbh;
+
+  local $dbh->{RaiseError} = 0;
+  local $dbh->{PrintError} = 0;
+
   my $rows  = $dbh->do(
     "INSERT INTO $table (lockstring, created, expires, locked_by)
     VALUES (?, ?, ?, ?)",
