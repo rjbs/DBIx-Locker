@@ -2,9 +2,9 @@ use strict;
 use warnings;
 use inc::Module::Install;
 
-name 'ObjectDB-Locker';
-all_from 'lib/ObjectDB/Locker.pm';
+name 'ICG-Locker';
+all_from 'lib/ICG/Locker.pm';
 
-requires 'ObjectDB';
+requires 'DBI';
 
 WriteAll;
