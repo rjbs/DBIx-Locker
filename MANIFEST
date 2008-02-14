@@ -14,3 +14,4 @@ META.yml
 sql/mysql.sql
 sql/sqlite.sql
 t/basic.t
+bin/icg_locker_purge
