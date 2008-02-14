@@ -11,6 +11,7 @@ requires 'ICG::CLI';
 requires 'ICG::Exceptions';
 requires 'ICG::Handy';
 requires 'JSON::XS';
+requires 'Sys::Hostname';
 
 install_script('bin/icg_locker_purge');
 

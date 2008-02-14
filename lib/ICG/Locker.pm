@@ -3,7 +3,7 @@ use warnings;
 use 5.008;
 
 package ICG::Locker;
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 use DBI;
 use Data::GUID ();
@@ -11,6 +11,7 @@ use ICG::Exceptions;
 use ICG::Handy ();
 use ICG::Locker::Lock;
 use JSON::XS ();
+use Sys::Hostname ();
 
 =head1 NAME
 
@@ -109,6 +110,7 @@ sub lock {
   $expires = time + $expires;
 
   my $locked_by = {
+    host => Sys::Hostname::hostname(),
     guid => Data::GUID->new->as_string,
     pid  => $$,
   };
