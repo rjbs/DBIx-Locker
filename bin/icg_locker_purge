@@ -1,0 +1,30 @@
+#!/icg/bin/perl-5.8
+use strict;
+use warnings;
+use 5.008;
+
+=head1 NAME
+
+icg_locker_purge - purge old semaphores
+
+=cut
+
+use ICG::CLI;
+use ICG::SvcLogger;
+
+my ($opt, $usage) = describe_options(
+  '%c %o',
+  [ 'locker-class=s', "what locker class to purge",
+    { default => $ENV{ICG_LOCKER_CLASS} }  ],
+);
+
+eval "require $opt->{locker_class};" or die $@;
+
+my $logger = ICG::SvcLogger->new({
+  program_name => 'icg_locker_purge',
+  facility     => 'daemon',
+});
+
+my $locks = $opt->{locker_class}->new->purge_expired_locks;
+
+$logger->([ 'purged %s locks', $locks ]);
