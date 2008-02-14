@@ -23,6 +23,7 @@ eval "require $opt->{locker_class};" or die $@;
 my $logger = ICG::SvcLogger->new({
   program_name => 'icg_locker_purge',
   facility     => 'daemon',
+  to_stdout    => 1,
 });
 
 my $locks = $opt->{locker_class}->new->purge_expired_locks;
