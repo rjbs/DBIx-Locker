@@ -3,7 +3,7 @@ use warnings;
 use 5.008;
 
 package ICG::Locker::Lock;
-our $VERSION = '0.001';
+our $VERSION = '0.002001';
 
 =head1 NAME
 
