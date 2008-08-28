@@ -90,6 +90,7 @@ sub unlock {
 
 sub DESTROY {
   my ($self) = @_;
+  local $@;
   return unless $self->locked_by->{pid} == $$;
   $self->unlock;
 }
