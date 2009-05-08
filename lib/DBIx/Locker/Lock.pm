@@ -1,17 +1,12 @@
 use strict;
 use warnings;
 use 5.008;
+# ABSTRACT: a live resource lock
 
 package DBIx::Locker::Lock;
 our $VERSION = '0.002002';
 
-=head1 NAME
-
-DBIx::Locker::Lock - a live resource lock
-
-=head1 METHODS
-
-=head2 new
+=method new
 
 B<Calling this method is a very, very stupid idea.>  This method is called by
 L<DBIx::Locker> to create locks.  Since you are not a locker, you should not
@@ -41,13 +36,13 @@ sub new {
   return bless $guts => $class;
 }
 
-=head2 locker
+=method locker
 
-=head2 lock_id
+=method lock_id
 
-=head2 expires
+=method expires
 
-=head2 locked_by
+=method locked_by
 
 These are accessors for data supplied to L</new>.
 
@@ -62,7 +57,7 @@ BEGIN {
   }
 }
 
-=head2 guid
+=method guid
 
 This method returns the lock's globally unique id.
 
@@ -70,7 +65,7 @@ This method returns the lock's globally unique id.
 
 sub guid { $_[0]->locked_by->{guid} }
 
-=head2 unlock
+=method unlock
 
 This method unlocks the lock, deleting the semaphor record.  This method is
 automatically called when locks are garbage collected.
@@ -94,13 +89,5 @@ sub DESTROY {
   return unless $self->locked_by->{pid} == $$;
   $self->unlock;
 }
-
-=head1 COPYRIGHT AND LICENSE
-
-Proprietary.  Copyright 2008 IC Group
-
-All rights reserved.
-
-=cut
 
 1;

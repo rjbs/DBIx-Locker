@@ -3,7 +3,7 @@ use warnings;
 use 5.008;
 
 package DBIx::Locker;
-our $VERSION = '0.002002';
+# ABSTRACT: locks for db resources that might not be totally insane
 
 use DBI;
 use Data::GUID ();
@@ -11,13 +11,7 @@ use DBIx::Locker::Lock;
 use JSON::XS ();
 use Sys::Hostname ();
 
-=head1 NAME
-
-DBIx::Locker - locks for db resources that might not be totally insane
-
-=head1 METHODS
-
-=head2 new
+=method new
 
   my $locker = DBIx::Locker->new(\%arg);
 
@@ -43,9 +37,9 @@ sub new {
   return bless $guts => $class;
 }
 
-=head2 default_dbi_args
+=method default_dbi_args
 
-=head2 default_table
+=method default_table
 
 These methods may be defined in subclasses to provide defaults to be used when
 constructing a new locker.
@@ -55,7 +49,7 @@ constructing a new locker.
 sub default_dbi_args { X->throw('dbi_args not given and no default defined') }
 sub default_table    { X->throw('table not given and no default defined') }
 
-=head2 dbh
+=method dbh
 
 This method returns the locker's dbh.
 
@@ -71,7 +65,7 @@ sub dbh {
   return $self->{dbh} = $dbh;
 }
 
-=head2 table
+=method table
 
 This method returns the name of the table in the database in which locks are
 stored.
@@ -82,7 +76,7 @@ sub table {
   return $_[0]->{table}
 }
 
-=head2 lock
+=method lock
 
   my $lock = $locker->lock($identifier, \%arg);
 
@@ -150,7 +144,7 @@ sub _time_to_string {
     $time->[2], $time->[1], $time->[0];
 }
 
-=head2 purge_expired_locks
+=method purge_expired_locks
 
 This method deletes expired semaphores.
 
@@ -171,13 +165,5 @@ sub purge_expired_locks {
     $self->_time_to_string,
   );
 }
-
-=head1 COPYRIGHT AND LICENSE
-
-Proprietary.  Copyright 2008 IC Group
-
-All rights reserved.
-
-=cut
 
 1;
