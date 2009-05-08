@@ -2,17 +2,14 @@ use strict;
 use warnings;
 use inc::Module::Install;
 
-name 'ICG-Locker';
-all_from 'lib/ICG/Locker.pm';
+name 'DBIx-Locker';
+all_from 'lib/DBIx/Locker.pm';
 
 requires 'DBI';
 requires 'Data::GUID';
-requires 'ICG::CLI';
-requires 'ICG::Exceptions';
-requires 'ICG::Handy';
 requires 'JSON::XS';
 requires 'Sys::Hostname';
 
-install_script('bin/icg_locker_purge');
+install_script('bin/dbix_locker_purge');
 
 WriteAll;
