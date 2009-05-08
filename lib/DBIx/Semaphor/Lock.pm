@@ -2,22 +2,22 @@ use strict;
 use warnings;
 use 5.008;
 
-package ICG::Locker::Lock;
+package DBIx::Semaphor::Lock;
 our $VERSION = '0.002002';
 
 =head1 NAME
 
-ICG::Locker::Lock - a live resource lock
+DBIx::Semaphor::Lock - a live resource lock
 
 =head1 METHODS
 
 =head2 new
 
 B<Calling this method is a very, very stupid idea.>  This method is called by
-L<ICG::Locker> to create locks.  Since you are not a locker, you should not
+L<DBIx::Semaphor> to create locks.  Since you are not a locker, you should not
 call this method.  Seriously.
 
-  my $locker = ICG::Locker::Lock->new(\%arg);
+  my $locker = DBIx::Semaphor::Lock->new(\%arg);
 
 This returns a new lock. 
 
@@ -85,7 +85,7 @@ sub unlock {
 
   my $rows = $dbh->do("DELETE FROM $table WHERE id=?", undef, $self->lock_id);
 
-  X->throw('error releasing lock') unless $rows == 1;
+  die('error releasing lock') unless $rows == 1;
 }
 
 sub DESTROY {

@@ -2,26 +2,24 @@ use strict;
 use warnings;
 use 5.008;
 
-package ICG::Locker;
+package DBIx::Semaphor;
 our $VERSION = '0.002002';
 
 use DBI;
 use Data::GUID ();
-use ICG::Exceptions;
-use ICG::Handy ();
-use ICG::Locker::Lock;
+use DBIx::Semaphor::Lock;
 use JSON::XS ();
 use Sys::Hostname ();
 
 =head1 NAME
 
-ICG::Locker - locks for db resources that might not be totally insane
+DBIx::Semaphor - locks for db resources that might not be totally insane
 
 =head1 METHODS
 
 =head2 new
 
-  my $locker = ICG::Locker->new(\%arg);
+  my $locker = DBIx::Semaphor->new(\%arg);
 
 This returns a new locker. 
 
@@ -67,7 +65,7 @@ sub dbh {
   my ($self) = @_;
   return $self->{dbh} if $self->{dbh} and eval { $self->{dbh}->ping };
 
-  X::Unavailable->throw("couldn't connect to database: $DBI::errstr")
+  die("couldn't connect to database: $DBI::errstr")
     unless my $dbh = DBI->connect(@{ $self->{dbi_args} });
 
   return $self->{dbh} = $dbh;
@@ -88,7 +86,7 @@ sub table {
 
   my $lock = $locker->lock($identifier, \%arg);
 
-This method attempts to return a new ICG::Locker::Lock.
+This method attempts to return a new DBIx::Semaphor::Lock.
 
 =cut
 
@@ -126,14 +124,14 @@ sub lock {
     VALUES (?, ?, ?, ?)",
     undef,
     $ident,
-    ICG::Handy::now14,
-    ICG::Handy::then14(localtime($expires)),
+    $self->_time_to_string,
+    $self->_time_to_string([ localtime($expires) ]),
     $JSON->encode($locked_by),
   );
 
-  X::Unavailable->throw('could not lock resource') unless $rows and $rows == 1;
+  die('could not lock resource') unless $rows and $rows == 1;
 
-  my $lock = ICG::Locker::Lock->new({
+  my $lock = DBIx::Semaphor::Lock->new({
     locker    => $self,
     lock_id   => $dbh->last_insert_id(undef, undef, $table, 'id'),
     expires   => $expires,
@@ -141,6 +139,15 @@ sub lock {
   });
 
   return $lock;
+}
+
+sub _time_to_string {
+  my ($self, $time) = @_;
+
+  @time = [ localtime ] unless $time;
+  return sprintf '%s-%s-%s %s:%s:%s',
+    $time->[5] + 1900, $time->[4]+1, $time->[3],
+    $time->[2], $time->[1], $time->[0];
 }
 
 =head2 purge_expired_locks
@@ -161,7 +168,7 @@ sub purge_expired_locks {
   my $rows = $dbh->do(
     "DELETE FROM $table WHERE expires < ?",
     undef,
-    ICG::Handy::now14,
+    $self->_time_to_string,
   );
 }
 
