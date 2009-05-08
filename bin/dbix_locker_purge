@@ -1,4 +1,4 @@
-#!/icg/bin/perl-5.8
+#!perl
 use strict;
 use warnings;
 use 5.008;
