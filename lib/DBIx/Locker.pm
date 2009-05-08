@@ -2,24 +2,24 @@ use strict;
 use warnings;
 use 5.008;
 
-package DBIx::Semaphor;
+package DBIx::Locker;
 our $VERSION = '0.002002';
 
 use DBI;
 use Data::GUID ();
-use DBIx::Semaphor::Lock;
+use DBIx::Locker::Lock;
 use JSON::XS ();
 use Sys::Hostname ();
 
 =head1 NAME
 
-DBIx::Semaphor - locks for db resources that might not be totally insane
+DBIx::Locker - locks for db resources that might not be totally insane
 
 =head1 METHODS
 
 =head2 new
 
-  my $locker = DBIx::Semaphor->new(\%arg);
+  my $locker = DBIx::Locker->new(\%arg);
 
 This returns a new locker. 
 
@@ -86,7 +86,7 @@ sub table {
 
   my $lock = $locker->lock($identifier, \%arg);
 
-This method attempts to return a new DBIx::Semaphor::Lock.
+This method attempts to return a new DBIx::Locker::Lock.
 
 =cut
 
@@ -131,7 +131,7 @@ sub lock {
 
   die('could not lock resource') unless $rows and $rows == 1;
 
-  my $lock = DBIx::Semaphor::Lock->new({
+  my $lock = DBIx::Locker::Lock->new({
     locker    => $self,
     lock_id   => $dbh->last_insert_id(undef, undef, $table, 'id'),
     expires   => $expires,

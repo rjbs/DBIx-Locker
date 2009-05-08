@@ -2,22 +2,22 @@ use strict;
 use warnings;
 use 5.008;
 
-package DBIx::Semaphor::Lock;
+package DBIx::Locker::Lock;
 our $VERSION = '0.002002';
 
 =head1 NAME
 
-DBIx::Semaphor::Lock - a live resource lock
+DBIx::Locker::Lock - a live resource lock
 
 =head1 METHODS
 
 =head2 new
 
 B<Calling this method is a very, very stupid idea.>  This method is called by
-L<DBIx::Semaphor> to create locks.  Since you are not a locker, you should not
+L<DBIx::Locker> to create locks.  Since you are not a locker, you should not
 call this method.  Seriously.
 
-  my $locker = DBIx::Semaphor::Lock->new(\%arg);
+  my $locker = DBIx::Locker::Lock->new(\%arg);
 
 This returns a new lock. 
 
