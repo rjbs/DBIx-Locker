@@ -4,7 +4,7 @@ use warnings;
 use Test::More tests => 8;
 
 use DBI;
-use DBIx::Sempahor;
+use DBIx::Locker;
 
 unlink 'test.db';
 
