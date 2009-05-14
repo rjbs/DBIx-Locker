@@ -11,6 +11,26 @@ use DBIx::Locker::Lock;
 use JSON::XS ();
 use Sys::Hostname ();
 
+=head1 DESCRIPTION
+
+...and a B<warning>.
+
+DBIx::Locker was written to replace some lousy database resource locking code.
+The code would establish a MySQL lock with C<GET_LOCK> to lock arbitrary
+resources.  Unfortunately, the code would also silently reconnect in case of
+database connection failure, silently losing the connection-based lock.
+DBIx::Locker locks by creating a persistent row in a "locks" table.
+
+Because DBIx::Locker locks are stored in a table, they won't go away.  They
+have to be purged regularly.  (A program for doing this, F<dbix_locker_purge>,
+is included.)  The locked resource is just a string.  All records in the lock
+(or semaphore) table are unique on the lock string.
+
+This is the I<entire> mechanism.  This is quick and dirty and quite effective,
+but it's not highly efficient.  If you need high speed locks with multiple
+levels of resolution, or anything other than a quick and brutal solution,
+I<keep looking>.
+
 =method new
 
   my $locker = DBIx::Locker->new(\%arg);
