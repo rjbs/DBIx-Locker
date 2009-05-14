@@ -4,7 +4,6 @@ use 5.008;
 # ABSTRACT: a live resource lock
 
 package DBIx::Locker::Lock;
-our $VERSION = '0.002002';
 
 =method new
 
