@@ -1,4 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          add sqlite prereq
+
+0.091340
           first release to the CPAN
