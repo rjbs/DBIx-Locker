@@ -5,6 +5,8 @@ use 5.008;
 
 package DBIx::Locker::Lock;
 
+use Carp ();
+
 =method new
 
 B<Calling this method is a very, very stupid idea.>  This method is called by
@@ -39,8 +41,6 @@ sub new {
 
 =method lock_id
 
-=method expires
-
 =method locked_by
 
 These are accessors for data supplied to L</new>.
@@ -48,12 +48,52 @@ These are accessors for data supplied to L</new>.
 =cut
 
 BEGIN {
-  for my $attr (qw(locker lock_id expires locked_by)) {
+  for my $attr (qw(locker lock_id locked_by)) {
     Sub::Install::install_sub({
       code => sub { $_[0]->{$attr} },
       as   => $attr,
     });
   }
+}
+
+=method expires
+
+This method returns the expiration time (as a unix timestamp) as provided to
+L</new> -- unless expiration has been changed.  Expiration can be changed by
+using this method as a mutator:
+
+  # expire one hour from now, no matter what initial expiration was
+  $lock->expired(time + 3600);
+
+When updating the expiration time, if the given expiration time is not a valid
+unix time, or if the expiration cannot be updated, an exception will be raised.
+
+=cut
+
+sub expires {
+  my $self = shift;
+  return $self->{expires} unless @_;
+
+  my $new_expiry = shift;
+
+  Carp::confess("new expiry must be a Unix epoch time")
+    unless $new_expiry =~ /\A\d+\z/;
+
+  my $dbh   = $self->locker->dbh;
+  my $table = $self->locker->table;
+
+  my $rows  = $dbh->do(
+    "UPDATE $table SET expires = ? WHERE id = ?",
+    undef,
+    $new_expiry,
+    $self->lock_id,
+  );
+
+  Carp::confess('error updating expiry time') unless $rows == 1;
+
+  $self->{expires} = $new_expiry;
+
+  return $new_expiry;
 }
 
 =method guid
@@ -79,34 +119,7 @@ sub unlock {
 
   my $rows = $dbh->do("DELETE FROM $table WHERE id=?", undef, $self->lock_id);
 
-  die('error releasing lock') unless $rows == 1;
-}
-
-=method update_expiry
-
-This method updates the expiration time for the given lock. It accepts a Unix
-epoch time as an integer.
-
-=cut
-
-sub update_expiry {
-  my ($self, $new_expiry) = @_;
-
-  die "new expiry must be a Unix epoch time" unless $new_expiry =~ /\A\d+\Z/;
-
-  my $dbh   = $self->locker->dbh;
-  my $table = $self->locker->table;
-
-  my $rows  = $dbh->do(
-    "UPDATE $table SET expires = ? WHERE id = ?",
-    undef,
-    $new_expiry,
-    $self->lock_id,
-  );
-
-  die('error updating expiry time') unless $rows == 1;
-
-  $self->{expires} = $new_expiry;
+  Carp::confess('error releasing lock') unless $rows == 1;
 }
 
 sub DESTROY {

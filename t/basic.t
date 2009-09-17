@@ -63,7 +63,7 @@ my $guid;
   my $lock = $locker->lock('Zombie Time Machine');
   my $original_expiry = $lock->expires;
   my $new_expiry = time + 1000;
-  $lock->update_expiry($new_expiry);
+  $lock->expires($new_expiry);
   is($lock->expires, $new_expiry, "lock expiry updated correctly in object");
   my $dbh = $locker->dbh;
   my $sth = $dbh->prepare('SELECT expires FROM locks WHERE id = ?');
