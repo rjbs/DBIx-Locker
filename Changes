@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
-{{$NEXT}}
+0.092600  2009-09-17
+          make ->expires a mutator (APEIRON)
+
+0.091350  2009-05-15 12:27:49 UTC
           add sqlite prereq
 
 0.091340
