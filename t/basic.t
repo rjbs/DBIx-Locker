@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 12;
 
 use DBI;
 use DBIx::Locker;
@@ -37,6 +37,10 @@ my $guid;
   my $id = $lock->lock_id;
   like($id, qr/\A\d+\z/, "we got a numeric lock id");
 
+  my $expiry = $lock->expires;
+  like($expiry, qr/\A\d+\z/, "expiry is an integer");
+  cmp_ok($expiry, '>', time, "expiry is in the future");
+
   $guid = $lock->guid;
 
   eval { $locker->lock('Zombie Soup'); };
@@ -53,4 +57,17 @@ my $guid;
   my $lock_2 = $locker->lock('Zombie Cola');
   isa_ok($lock_2, 'DBIx::Locker::Lock', 'third lock');
   isnt($lock->lock_id, $lock_2->lock_id, 'two locks, two distinct id values');
+}
+
+{
+  my $lock = $locker->lock('Zombie Time Machine');
+  my $original_expiry = $lock->expires;
+  my $new_expiry = time + 1000;
+  $lock->update_expiry($new_expiry);
+  is($lock->expires, $new_expiry, "lock expiry updated correctly in object");
+  my $dbh = $locker->dbh;
+  my $sth = $dbh->prepare('SELECT expires FROM locks WHERE id = ?');
+  $sth->execute($lock->lock_id);
+  my ($new_expires) = $sth->fetchrow_array;
+  is($new_expires, $new_expiry, "lock expiry updated correctly in DB");
 }

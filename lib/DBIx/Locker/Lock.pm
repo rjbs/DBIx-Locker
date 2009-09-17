@@ -82,6 +82,33 @@ sub unlock {
   die('error releasing lock') unless $rows == 1;
 }
 
+=method update_expiry
+
+This method updates the expiration time for the given lock. It accepts a Unix
+epoch time as an integer.
+
+=cut
+
+sub update_expiry {
+  my ($self, $new_expiry) = @_;
+
+  die "new expiry must be a Unix epoch time" unless $new_expiry =~ /\A\d+\Z/;
+
+  my $dbh   = $self->locker->dbh;
+  my $table = $self->locker->table;
+
+  my $rows  = $dbh->do(
+    "UPDATE $table SET expires = ? WHERE id = ?",
+    undef,
+    $new_expiry,
+    $self->lock_id,
+  );
+
+  die('error updating expiry time') unless $rows == 1;
+
+  $self->{expires} = $new_expiry;
+}
+
 sub DESTROY {
   my ($self) = @_;
   local $@;
