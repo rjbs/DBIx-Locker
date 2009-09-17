@@ -50,7 +50,10 @@ These are accessors for data supplied to L</new>.
 BEGIN {
   for my $attr (qw(locker lock_id locked_by)) {
     Sub::Install::install_sub({
-      code => sub { $_[0]->{$attr} },
+      code => sub {
+        Carp::confess("$attr is read-only") if @_ > 1;
+        $_[0]->{$attr}
+      },
       as   => $attr,
     });
   }
