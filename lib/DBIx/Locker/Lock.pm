@@ -92,7 +92,8 @@ sub expires {
     $self->lock_id,
   );
 
-  Carp::confess('error updating expiry time') unless $rows == 1;
+  my $str = defined $rows ? $rows : 'undef';
+  Carp::confess("error updating expiry: UPDATE returned $str") if $rows != 1;
 
   $self->{expires} = $new_expiry;
 

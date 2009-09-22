@@ -5,6 +5,7 @@ use 5.008;
 package DBIx::Locker;
 # ABSTRACT: locks for db resources that might not be totally insane
 
+use Carp ();
 use DBI;
 use Data::GUID ();
 use DBIx::Locker::Lock;
@@ -54,6 +55,16 @@ sub new {
     table    => ($arg->{table}    || $class->default_table),
   };
 
+  Carp::confess("cannot use a dbh without RaiseError")
+    if $guts->{dbh} and not $guts->{dbh}{RaiseError};
+  
+  my $dbi_attr = $guts->{dbi_args}[3] ||= {};
+
+  Carp::confess("RaiseError cannot be disabled")
+    if exists $dbi_attr->{RaiseError} and not $dbi_attr->{RaiseError};
+
+  $dbi_attr->{RaiseError} = 1;
+
   return bless $guts => $class;
 }
 
@@ -66,8 +77,13 @@ constructing a new locker.
 
 =cut
 
-sub default_dbi_args { X->throw('dbi_args not given and no default defined') }
-sub default_table    { X->throw('table not given and no default defined') }
+sub default_dbi_args {
+  Carp::confess('dbi_args not given and no default defined')
+}
+
+sub default_table    {
+  Carp::Confess('table not given and no default defined')
+}
 
 =method dbh
 
