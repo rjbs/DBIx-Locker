@@ -44,8 +44,11 @@ my $guid;
   $guid = $lock->guid;
 
   eval { $locker->lock('Zombie Soup'); };
-  # isa_ok($@, 'X::Unavailable', "can't lock already-locked resources");
-  ok($@);
+  ok(
+    $@, 
+    # (used to be isa_ok) 'X::Unavailable',
+    "can't lock already-locked resources"
+  );
 }
 
 {
