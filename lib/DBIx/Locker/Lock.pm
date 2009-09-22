@@ -82,13 +82,15 @@ sub expires {
   Carp::confess("new expiry must be a Unix epoch time")
     unless $new_expiry =~ /\A\d+\z/;
 
+  my $time_array = [ localtime $new_expiry ];
+
   my $dbh   = $self->locker->dbh;
   my $table = $self->locker->table;
 
   my $rows  = $dbh->do(
     "UPDATE $table SET expires = ? WHERE id = ?",
     undef,
-    $new_expiry,
+    $self->locker->_time_to_string($time_array),
     $self->lock_id,
   );
 

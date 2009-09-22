@@ -175,7 +175,7 @@ sub _time_to_string {
   my ($self, $time) = @_;
 
   $time = [ localtime ] unless $time;
-  return sprintf '%s-%s-%s %s:%s:%s',
+  return sprintf '%04u-%02u-%02u %02u:%02u:%02u',
     $time->[5] + 1900, $time->[4]+1, $time->[3],
     $time->[2], $time->[1], $time->[0];
 }
