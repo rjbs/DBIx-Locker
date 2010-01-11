@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.100110  2010-01-11 18:59:08 America/New_York
           do not require anyone to install JSON::XS
 
 0.092650  2009-09-22
