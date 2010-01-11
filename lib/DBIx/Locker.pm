@@ -9,7 +9,7 @@ use Carp ();
 use DBI;
 use Data::GUID ();
 use DBIx::Locker::Lock;
-use JSON::XS ();
+use JSON 2 ();
 use Sys::Hostname ();
 
 =head1 DESCRIPTION

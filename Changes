@@ -1,5 +1,8 @@
 Revision history for {{$dist->name}}
 
+{{$NEXT}}
+          do not require anyone to install JSON::XS
+
 0.092650  2009-09-22
           correctly convert timestamps to strings when updating expiry
           a few error handling improvemens
