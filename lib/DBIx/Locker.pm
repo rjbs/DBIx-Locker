@@ -121,7 +121,7 @@ This method attempts to return a new DBIx::Locker::Lock.
 =cut
 
 my $JSON;
-BEGIN { $JSON = JSON::XS->new->canonical(1)->space_after(1); }
+BEGIN { $JSON = JSON->new->canonical(1)->space_after(1); }
 
 sub lock {
   my ($self, $ident, $arg) = @_;
