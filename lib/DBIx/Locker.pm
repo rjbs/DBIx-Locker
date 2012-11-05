@@ -57,7 +57,7 @@ See the C<sql> directory included in this dist for DDL for your database.
 
   my $locker = DBIx::Locker->new(\%arg);
 
-This returns a new locker. 
+This returns a new locker.
 
 Valid arguments are:
 
@@ -78,7 +78,7 @@ sub new {
 
   Carp::confess("cannot use a dbh without RaiseError")
     if $guts->{dbh} and not $guts->{dbh}{RaiseError};
-  
+
   my $dbi_attr = $guts->{dbi_args}[3] ||= {};
 
   Carp::confess("RaiseError cannot be disabled")
@@ -184,7 +184,7 @@ sub lock {
 
   my $lock = DBIx::Locker::Lock->new({
     locker    => $self,
-    lock_id   => $dbh->last_insert_id(undef, undef, $table, 'id'),
+    lock_id   => $self->last_insert_id,
     expires   => $expires,
     locked_by => $locked_by,
   });
@@ -221,6 +221,20 @@ sub purge_expired_locks {
     undef,
     $self->_time_to_string,
   );
+}
+
+=method last_insert_id
+
+This method exists so that subclasses can do something else to support their
+DBD for getting the id of the created lock.  For example, with DBD::ODBC and
+SQL Server it should be:
+
+ sub last_insert_id { ($_[0]->dbh->selectrow_array('SELECT @@IDENTITY'))[0] }
+
+=cut
+
+sub last_insert_id {
+   $_[0]->dbh->last_insert_id(undef, undef, $_[0]->table, 'id')
 }
 
 1;
