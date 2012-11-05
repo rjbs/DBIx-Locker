@@ -32,6 +32,27 @@ but it's not highly efficient.  If you need high speed locks with multiple
 levels of resolution, or anything other than a quick and brutal solution,
 I<keep looking>.
 
+=head1 STORAGE
+
+To use this module you'll need to create the lock table, which should have five
+columns:
+
+=over
+
+=item * C<id> Autoincrementing ID is recommended
+
+=item * C<lockstring> varchar(128) with a unique constraint
+
+=item * C<created> datetime
+
+=item * C<exires> datetime
+
+=item * C<locked_by> text
+
+=back
+
+See the C<sql> directory included in this dist for DDL for your database.
+
 =method new
 
   my $locker = DBIx::Locker->new(\%arg);
