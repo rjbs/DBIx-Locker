@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.100112  2012-11-06 12:01:01 America/New_York
           Add MSSQL DDL (frew)
           Add documentation of the storage table (frew)
           Factor out last_insert_id for other drivers (frew)
