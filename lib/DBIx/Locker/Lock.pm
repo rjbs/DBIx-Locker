@@ -6,6 +6,7 @@ use 5.008;
 package DBIx::Locker::Lock;
 
 use Carp ();
+use Sub::Install ();
 
 =method new
 
