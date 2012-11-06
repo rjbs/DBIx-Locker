@@ -2,12 +2,8 @@
 use strict;
 use warnings;
 use 5.008;
-
-=head1 NAME
-
-dbix_locker_purge - purge old locks
-
-=cut
+# PODNAME:  dbix_locker_pureg
+# ABSTRACT: purge old locks
 
 use Getopt::Long::Descriptive;
 use Log::Dispatchouli;
