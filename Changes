@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.100113  2013-07-05 21:13:26 America/New_York
+          fix typo, update bugtracker
+
 0.100112  2012-11-06 12:01:01 America/New_York
           Add MSSQL DDL (frew)
           Add documentation of the storage table (frew)
