@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use DBI;
 use DBIx::Locker;
@@ -76,5 +76,13 @@ my $guid;
     $new_expires,
     $locker->_time_to_string([ localtime $new_expiry ]),
     "lock expiry updated correctly in DB"
+  );
+}
+{
+  my $lock = $locker->lock('a');
+  eval { $locker->lock('a') };
+  like(
+    $@, qr/could not lock resource <a>:.*not unique/,
+    'underlying DB exception included'
   );
 }

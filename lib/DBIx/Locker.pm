@@ -180,7 +180,13 @@ sub lock {
     $JSON->encode($locked_by),
   );
 
-  die('could not lock resource') unless $rows and $rows == 1;
+  die(
+    "could not lock resource <$ident>" . (
+      $dbh->err && $dbh->errstr
+        ? (': ' .  $dbh->errstr)
+        : ''
+    )
+  ) unless $rows and $rows == 1;
 
   my $lock = DBIx::Locker::Lock->new({
     locker    => $self,
