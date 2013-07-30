@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          Include errstr from underlying db (frew)
 
 0.100113  2013-07-05 21:13:26 America/New_York
           fix typo, update bugtracker
