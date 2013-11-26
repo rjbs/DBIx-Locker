@@ -193,6 +193,7 @@ sub lock {
     lock_id   => $self->last_insert_id,
     expires   => $expires,
     locked_by => $locked_by,
+    lockstring => $ident,
   });
 
   return $lock;

@@ -33,6 +33,7 @@ sub new {
     lock_id   => $arg->{lock_id},
     expires   => $arg->{expires},
     locked_by => $arg->{locked_by},
+    lockstring => $arg->{lockstring},
   };
 
   return bless $guts => $class;
@@ -44,12 +45,14 @@ sub new {
 
 =method locked_by
 
+=method lockstring
+
 These are accessors for data supplied to L</new>.
 
 =cut
 
 BEGIN {
-  for my $attr (qw(locker lock_id locked_by)) {
+  for my $attr (qw(locker lock_id locked_by lockstring)) {
     Sub::Install::install_sub({
       code => sub {
         Carp::confess("$attr is read-only") if @_ > 1;
