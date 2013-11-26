@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 16;
 
 use DBI;
 use DBIx::Locker;
@@ -49,6 +49,11 @@ my $guid;
     # (used to be isa_ok) 'X::Unavailable',
     "can't lock already-locked resources"
   );
+
+  ok($lock->is_locked, 'lock is active');
+  $lock->unlock;
+  ok(!$lock->is_locked, 'lock is not active');
+  ok(eval { $lock->unlock; 1}, 'unlock twice works');
 }
 
 {
