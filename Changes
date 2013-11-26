@@ -3,6 +3,8 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           Add lockstring method to ::Lock (frew)
 
+          Add is_locked flag to ::Lock to make unlock idempotent (frew)
+
 0.100114  2013-07-30 18:03:23 America/New_York
           Include errstr from underlying db (frew)
 

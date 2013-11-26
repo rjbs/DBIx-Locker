@@ -30,6 +30,7 @@ sub new {
   my ($class, $arg) = @_;
 
   my $guts = {
+    is_locked => 1,
     locker    => $arg->{locker},
     lock_id   => $arg->{lock_id},
     expires   => $arg->{expires},
@@ -115,6 +116,17 @@ This method returns the lock's globally unique id.
 
 sub guid { $_[0]->locked_by->{guid} }
 
+=method is_locked
+
+Method to see if the lock is active or not
+
+=cut
+
+sub is_locked {
+   $_[0]->{is_locked} = $_[1] if exists $_[1];
+   $_[0]->{is_locked}
+}
+
 =method unlock
 
 This method unlocks the lock, deleting the semaphor record.  This method is
@@ -125,12 +137,15 @@ automatically called when locks are garbage collected.
 sub unlock {
   my ($self) = @_;
 
+  return unless $self->is_locked;
+
   my $dbh   = $self->locker->dbh;
   my $table = $self->locker->table;
 
   my $rows = $dbh->do("DELETE FROM $table WHERE id=?", undef, $self->lock_id);
 
   Carp::confess('error releasing lock') unless $rows == 1;
+  $self->is_locked(0);
 }
 
 sub DESTROY {
