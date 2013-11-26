@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use DBI;
 use DBIx::Locker;
@@ -33,6 +33,7 @@ my $guid;
 {
   my $lock = $locker->lock('Zombie Soup');
   isa_ok($lock, 'DBIx::Locker::Lock', 'obtained lock');
+  is($lock->lockstring, 'Zombie Soup', 'lockstring set');
 
   my $id = $lock->lock_id;
   like($id, qr/\A\d+\z/, "we got a numeric lock id");
