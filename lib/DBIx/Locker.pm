@@ -135,7 +135,7 @@ sub table {
 
 =method lock
 
-  my $lock = $locker->lock($identifier, \%arg);
+  my $lock = $locker->lock($lockstring, \%arg);
 
 This method attempts to return a new DBIx::Locker::Lock.
 
@@ -145,11 +145,11 @@ my $JSON;
 BEGIN { $JSON = JSON->new->canonical(1)->space_after(1); }
 
 sub lock {
-  my ($self, $ident, $arg) = @_;
+  my ($self, $lockstring, $arg) = @_;
   $arg ||= {};
 
   X::BadValue->throw('must provide a lockstring')
-    unless defined $ident and length $ident;
+    unless defined $lockstring and length $lockstring;
 
   my $expires = $arg->{expires} ||= 3600;
 
@@ -174,14 +174,14 @@ sub lock {
     "INSERT INTO $table (lockstring, created, expires, locked_by)
     VALUES (?, ?, ?, ?)",
     undef,
-    $ident,
+    $lockstring,
     $self->_time_to_string,
     $self->_time_to_string([ localtime($expires) ]),
     $JSON->encode($locked_by),
   );
 
   die(
-    "could not lock resource <$ident>" . (
+    "could not lock resource <$lockstring>" . (
       $dbh->err && $dbh->errstr
         ? (': ' .  $dbh->errstr)
         : ''
@@ -193,7 +193,7 @@ sub lock {
     lock_id   => $self->last_insert_id,
     expires   => $expires,
     locked_by => $locked_by,
-    lockstring => $ident,
+    lockstring => $lockstring,
   });
 
   return $lock;

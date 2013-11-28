@@ -18,10 +18,11 @@ call this method.  Seriously.
 
 This returns a new lock. 
 
-  locker    - the locker creating the lock
-  lock_id   - the id of the lock in the lock table
-  expires   - the time (in epoch seconds) at which the lock will expire
-  locked_by - a hashref of identifying information
+  locker     - the locker creating the lock
+  lock_id    - the id of the lock in the lock table
+  expires    - the time (in epoch seconds) at which the lock will expire
+  locked_by  - a hashref of identifying information
+  lockstring - the string that was locked
 
 =cut
 
