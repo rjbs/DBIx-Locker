@@ -2,6 +2,10 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.100116  2013-12-17 13:08:36-0500 America/New_York
+        - tweak test expectations to allow for multiline unique key error
+          (seems to be found in older SQLite?)
+
 0.100115  2013-11-27 22:40:10 America/New_York
           Add lockstring method to ::Lock (frew)
 
