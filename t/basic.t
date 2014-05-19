@@ -89,7 +89,7 @@ my $guid;
   my $lock = $locker->lock('a');
   eval { $locker->lock('a') };
   like(
-    $@, qr/could not lock resource <a>:.*not unique/s,
+    $@, qr/could not lock resource <a>:.*(?:not unique|unique constraint)/si,
     'underlying DB exception included'
   );
 }
