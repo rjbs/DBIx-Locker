@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.100117  2014-05-19 17:38:21-04:00 America/New_York
         - Fix tests on DBD::SQLite 1.42 (frew)
 
 0.100116  2013-12-17 13:08:36-0500 America/New_York
