@@ -45,7 +45,7 @@ columns:
 
 =item * C<created> datetime
 
-=item * C<exires> datetime
+=item * C<expires> datetime
 
 =item * C<locked_by> text
 

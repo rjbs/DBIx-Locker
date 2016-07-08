@@ -72,7 +72,7 @@ L</new> -- unless expiration has been changed.  Expiration can be changed by
 using this method as a mutator:
 
   # expire one hour from now, no matter what initial expiration was
-  $lock->expired(time + 3600);
+  $lock->expires(time + 3600);
 
 When updating the expiration time, if the given expiration time is not a valid
 unix time, or if the expiration cannot be updated, an exception will be raised.
