@@ -148,12 +148,15 @@ sub lock {
   my ($self, $lockstring, $arg) = @_;
   $arg ||= {};
 
-  X::BadValue->throw('must provide a lockstring')
+  Carp::confess("calling ->lock in void context is not permitted")
+    unless defined wantarray;
+
+  Carp::confess("no lockstring provided")
     unless defined $lockstring and length $lockstring;
 
   my $expires = $arg->{expires} ||= 3600;
 
-  X::BadValue->throw('expires must be a positive integer')
+  Carp::confess("expires must be a positive integer")
     unless $expires > 0 and $expires == int $expires;
 
   $expires = time + $expires;

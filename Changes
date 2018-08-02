@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - make ->lock in void context fatal
 
 0.100118  2016-07-17 15:59:46-04:00 America/New_York
         - fixes to typos in documentation (thanks, Sergiy Borodych)
