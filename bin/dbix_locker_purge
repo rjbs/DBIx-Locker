@@ -23,9 +23,9 @@ if (!$locker_class) {
 eval "require $locker_class;" or die $@;
 
 my $logger = Log::Dispatchouli->new({
-  program_name => 'dbix_locker_purge',
-  facility     => 'daemon',
-  to_stdout    => 1,
+  ident     => 'dbix_locker_purge',
+  facility  => 'daemon',
+  to_stdout => 1,
 });
 
 my $locks = $locker_class->new->purge_expired_locks;
