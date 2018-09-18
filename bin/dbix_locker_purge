@@ -30,4 +30,4 @@ my $logger = Log::Dispatchouli->new({
 
 my $locks = $locker_class->new->purge_expired_locks;
 
-$logger->([ 'purged %s locks', $locks ]);
+$logger->([ 'purged %d locks', $locks ]);
